@@ -11,6 +11,10 @@ SshChannel::SshChannel(QString name, SshClient *client)
 {
     qCDebug(sshchannel) << "createChannel:" << m_name;
     QObject::connect(m_sshClient, &SshClient::sshDataReceived, this, &SshChannel::sshDataReceived, Qt::QueuedConnection);
+    QObject::connect(m_sshClient, &SshClient::sshError, this, [&]{
+        emit this->stateChanged(ChannelState::Error);
+        m_channelState = ChannelState::Error;
+    }, Qt::QueuedConnection);
 }
 
 SshChannel::~SshChannel()

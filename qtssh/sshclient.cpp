@@ -316,6 +316,7 @@ void SshClient::_connection_socketError()
     qCWarning(sshclient) << m_name << ": ssh socket connection error:" << m_sshState;
     setSshState(SshState::Error);
     emit sshEvent();
+    emit sshError();
 }
 
 void SshClient::_connection_socketConnected()
