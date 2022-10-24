@@ -5,7 +5,7 @@
 #include "sshsftp.h"
 
 
-#define SFTP_BUFFER_SIZE 4096
+#define SFTP_BUFFER_SIZE (4096*25)
 
 class SshSftpCommand : public QObject
 {
