@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 project(qtssh VERSION 0.1)
 
 option(BUILD_STATIC  "Build static library"            OFF)
