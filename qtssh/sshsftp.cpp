@@ -119,14 +119,13 @@ bool SshSFtp::get(const QString &source, QString dest, bool override)
     return true;
 }
 
-int SshSFtp::mkdir(const QString &dest, int mode)
+bool SshSFtp::mkdir(const QString &dest, int mode)
 {
     SshSftpCommandMkdir cmd(dest, mode, *this);
     DEBUGCH << "mkdir(" << dest << "," << mode << ")";
     processCmd(&cmd);
     DEBUGCH << "mkdir(" << dest << ") = " << ((cmd.error())?("FAIL"):("OK"));
-    if(cmd.error()) return -1;
-    return 0;
+    return !cmd.error();
 }
 
 QStringList SshSFtp::readdir(const QString &d)
@@ -154,7 +153,7 @@ bool SshSFtp::isFile(const QString &d)
     return LIBSSH2_SFTP_S_ISREG(fileinfo.permissions);
 }
 
-int SshSFtp::mkpath(const QString &dest)
+bool SshSFtp::mkpath(const QString &dest)
 {
     DEBUGCH << "mkpath(" << dest << ")";
     if(isDir(dest)) return true;
@@ -164,8 +163,7 @@ int SshSFtp::mkpath(const QString &dest)
     {
         mkdir(dest);
     }
-    if(isDir(dest)) return true;
-    return false;
+    return isDir(dest);
 }
 
 bool SshSFtp::unlink(const QString &d)
@@ -174,8 +172,7 @@ bool SshSFtp::unlink(const QString &d)
     DEBUGCH << "unlink(" << d << "," << d << ")";
     processCmd(&cmd);
     DEBUGCH << "unlink(" << d << ") = " << ((cmd.error())?("FAIL"):("OK"));
-    if(cmd.error()) return -1;
-    return 0;
+    return !cmd.error();
 }
 
 quint64 SshSFtp::filesize(const QString &d)
@@ -318,7 +315,7 @@ bool SshSFtp::processCmd(SshSftpCommand *cmd)
     return (cmd->state() == SshSftpCommand::CommandState::Terminate);
 }
 
-bool SshSFtp::isError()
+bool SshSFtp::isError() 
 {
     return m_error;
 }

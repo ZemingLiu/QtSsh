@@ -39,11 +39,11 @@ public:
 
     QString send(const QString &source, QString dest);
     bool get(const QString &source, QString dest, bool override = false);
-    int mkdir(const QString &dest, int mode = 0755);
+    bool mkdir(const QString &dest, int mode = 0755);
     QStringList readdir(const QString &d);
     bool isDir(const QString &d);
     bool isFile(const QString &d);
-    int mkpath(const QString &dest);
+    bool mkpath(const QString &dest);
     bool unlink(const QString &d);
     quint64 filesize(const QString &d);
 
