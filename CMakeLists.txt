@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
-project(qtssh VERSION 0.1)
+project(QtSsh VERSION 0.1)
 
 option(BUILD_STATIC  "Build static library"            OFF)
 
@@ -19,10 +19,11 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(Qt5 REQUIRED COMPONENTS Core Network)
-set(QT_LIBRARIES Qt5::Core Qt5::Network)
-set(QT_VERSION ${Qt5_VERSION})
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Network)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network)
 
+set(QT_LIBRARIES Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Network)
+set(QT_VERSION ${Qt${QT_VERSION_MAJOR}_VERSION})
 
 add_subdirectory(qtssh)
 
@@ -30,11 +31,16 @@ if (WithExamples)
 add_subdirectory(examples)
 endif()
 
+include(CMakePackageConfigHelpers)
 # create Config.cmake
-configure_file(config.cmake.in "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Config.cmake" @ONLY)
+configure_package_config_file(
+	config.cmake.in
+	"${CMAKE_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+	INSTALL_DESTINATION lib/cmake
+	PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR
+)
 
 # create ConfigVersion.cmake
-include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
 	"${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
 	VERSION ${PROJECT_VERSION}

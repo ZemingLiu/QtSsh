@@ -5,7 +5,10 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(QT NAMES Qt6 Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network)
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Network)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network)
 
 set(QT_LIBRARIES Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Network)
