@@ -71,6 +71,26 @@ void SshSftpCommandSend::process()
                     {
                         return;
                     }
+                    else if(rc == LIBSSH2_ERROR_SFTP_PROTOCOL)
+                    {
+                        int size;
+                        char *emsg;
+                        QString msg;
+                        int ret = libssh2_session_last_error(sftp().sshClient()->session(), &emsg, &size, 0);
+                        if (ret != LIBSSH2_ERROR_EAGAIN)
+                        {
+                            msg = "SFTP Write error: " + QString::fromUtf8(emsg, size);
+                        }
+                        else
+                        {
+                            msg = "SFTP Write error: " + QString::number(rc);
+                        }
+                        qCWarning(logsshsftp) << msg;
+                        m_error = true;
+                        m_errMsg << msg;
+                        setState(CommandState::Error);
+                        return;
+                    }
                     qCWarning(logsshsftp) << "SFTP Write error " << rc;
                 }
                 m_nread -= rc;
